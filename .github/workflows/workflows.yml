@@ -1,5 +1,10 @@
 name: Java CI
 on: push
+
+env:
+  docker_username: ${{ github.actor }}
+  docker_password: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   clone:
     runs-on: ubuntu-latest
@@ -20,12 +25,20 @@ jobs:
         with:
           name: code
           path: .
-      - name: Build
-        run: chmod +x ci/build-app.sh && ci/build-app.sh
-      - name: Test
-        run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
+      - run: chmod +x ci/build-app.sh && ci/build-app.sh
+      - run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
       - uses: actions/upload-artifact@v3
         with: 
-          name: code
-          path: .
+          name: jar
+          path: app/build/libs/app-0.1-all.jar
+
+  docker-image:
+    runs-on: ubuntu-latest
+    needs: [build]
+    permissions:
+      packages: write
+    - name: build docker
+      run: chmod +x ci/build-docker.sh && ci/build-docker.sh
+    - name: push docker
+      run: chmod +x ci/push-docker.sh && ci/push-docker.sh
       
