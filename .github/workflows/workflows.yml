@@ -38,6 +38,10 @@ jobs:
     permissions:
       packages: write
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: jar
+          path: app/build/libs/app-0.1-all.jar
       - name: build docker
         run: chmod +x ci/build-docker.sh && ci/build-docker.sh
       - name: push docker
