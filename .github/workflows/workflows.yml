@@ -29,8 +29,8 @@ jobs:
       - run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
       - uses: actions/upload-artifact@v3
         with: 
-          name: jar
-          path: app/build/libs/app-0.1-all.jar
+          name: code
+          path: .
 
   docker-image:
     runs-on: ubuntu-latest
@@ -40,10 +40,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: jar
-          path: app/build/libs/app-0.1-all.jar
-      - name: build docker
-        run: chmod +x ci/build-docker.sh && ci/build-docker.sh
-      - name: push docker
-        run: chmod +x ci/push-docker.sh && ci/push-docker.sh
+          name: code
+          path: .
+      - run: chmod +x ci/build-docker.sh && ci/build-docker.sh
+      - run: chmod +x ci/push-docker.sh && ci/push-docker.sh
       
